@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalog &mdash; x402-mcp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-elevated: #161616;
+    --border: #222222;
+    --border-subtle: #1a1a1a;
+    --accent: #00ff88;
+    --accent-dim: rgba(0,255,136,0.08);
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-dim: #555;
+    --radius: 8px;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto;
+    padding: 0 32px; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--mono); font-size: 14px; font-weight: 500;
+    color: var(--text); text-decoration: none; letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-muted);
+    text-decoration: none; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--text); }
+  .nav-badge {
+    font-size: 11px; font-family: var(--mono);
+    background: var(--accent-dim); color: var(--accent);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 4px; padding: 2px 8px;
+  }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .page-meta { font-size: 14px; color: var(--text-muted); }
+  .page-meta a { color: var(--text-muted); text-underline-offset: 3px; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex; gap: 12px; align-items: center;
+    padding: 24px 0; flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1; min-width: 200px; max-width: 360px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px; color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-box::placeholder { color: var(--text-dim); }
+  .search-box:focus { border-color: #444; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .filter-btn:hover { border-color: #444; color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: rgba(0,255,136,0.3);
+    color: var(--accent);
+  }
+  .results-count {
+    font-size: 12px; color: var(--text-dim);
+    font-family: var(--mono);
+    margin-left: auto;
+  }
+
+  /* CATALOG GRID */
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding-bottom: 48px;
+  }
+  .catalog-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.15s;
+    cursor: default;
+  }
+  .catalog-card:hover { border-color: #333; }
+  .cat-tag {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    display: inline-block; width: fit-content;
+  }
+  .cat-tag.weather  { color: #7dd3fc; border-color: rgba(125,211,252,0.2); background: rgba(125,211,252,0.05); }
+  .cat-tag.finance  { color: #86efac; border-color: rgba(134,239,172,0.2); background: rgba(134,239,172,0.05); }
+  .cat-tag.location { color: #fbbf24; border-color: rgba(251,191,36,0.2);  background: rgba(251,191,36,0.05);  }
+  .cat-tag.government { color: #c084fc; border-color: rgba(192,132,252,0.2); background: rgba(192,132,252,0.05); }
+  .cat-tag.identity { color: #fb923c; border-color: rgba(251,146,60,0.2);  background: rgba(251,146,60,0.05);  }
+  .cat-tag.other    { color: var(--text-muted); }
+  .catalog-name { font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--text); }
+  .catalog-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; flex: 1; }
+  .catalog-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .catalog-price { font-size: 11px; font-weight: 700; font-family: var(--mono); color: var(--accent); }
+  .catalog-host { font-size: 10px; color: var(--text-dim); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* LOADING / EMPTY */
+  .state-msg {
+    grid-column: 1/-1;
+    padding: 64px 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex; justify-content: center; align-items: center;
+    gap: 8px; padding: 24px 0 48px;
+  }
+  .page-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 16px;
+    font-size: 12px; font-family: var(--mono);
+    color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .page-btn:hover:not(:disabled) { border-color: #444; color: var(--text); }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-info { font-size: 12px; color: var(--text-dim); font-family: var(--mono); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo { font-family: var(--mono); font-size: 13px; color: var(--text-muted); }
+  .footer-logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 12px; color: var(--text-dim); text-decoration: none; }
+  .footer-links a:hover { color: var(--text-muted); }
+
+  @media (max-width: 768px) {
+    .catalog-grid { grid-template-columns: 1fr 1fr; }
+    .container { padding: 0 20px; }
+    .nav-inner { padding: 0 20px; }
+    .results-count { display: none; }
+  }
+  @media (max-width: 480px) {
+    .catalog-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">x402<span>-mcp</span></a>
+    <div class="nav-links">
+      <a href="/">Overview</a>
+      <a href="/catalog" class="active">Catalog</a>
+      <a href="https://npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
+      <span class="nav-badge">v0.4.0</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <div class="page-title">Live API Catalog</div>
+    <div class="page-meta" id="catalog-meta">Loading catalog...</div>
+  </div>
+
+  <div class="controls">
+    <input class="search-box" type="text" id="search" placeholder="Search APIs..." autocomplete="off">
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="weather">Weather</button>
+      <button class="filter-btn" data-cat="finance">Finance</button>
+      <button class="filter-btn" data-cat="location">Location</button>
+      <button class="filter-btn" data-cat="government">Government</button>
+      <button class="filter-btn" data-cat="identity">Identity</button>
+      <button class="filter-btn" data-cat="other">Other</button>
+    </div>
+    <div class="results-count" id="results-count"></div>
+  </div>
+
+  <div class="catalog-grid" id="grid">
+    <div class="state-msg">Loading 959 live APIs...</div>
+  </div>
+
+  <div class="pagination" id="pagination" style="display:none">
+    <button class="page-btn" id="prev-btn">&#8592; Prev</button>
+    <span class="page-info" id="page-info"></span>
+    <button class="page-btn" id="next-btn">Next &#8594;</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">x402<span>-mcp</span> &mdash; by nullbuilds</span>
+    <div class="footer-links">
+      <a href="https://npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
+      <a href="/catalog.json">catalog.json</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var PAGE_SIZE = 48;
+  var allServices = [];
+  var filtered = [];
+  var currentPage = 0;
+  var activeCategory = 'all';
+  var searchQuery = '';
+
+  function categorize(svc) {
+    var text = ((svc.name || '') + ' ' + (svc.description || '') + ' ' + (svc.url || '')).toLowerCase();
+    if (/weather|forecast|temperature|humidity|wind|rain|storm|uv/.test(text)) return 'weather';
+    if (/financ|currency|forex|fx|stock|market|price|rate|cpi|inflation|exchange/.test(text)) return 'finance';
+    if (/geoloc|location|ip address|zip|postal|aqi|air quality|geocod/.test(text)) return 'location';
+    if (/fda|drug|census|congress|bill|sanction|ofac|government|federal/.test(text)) return 'government';
+    if (/vin|barcode|upc|product|vehicle|identity|decode/.test(text)) return 'identity';
+    return 'other';
+  }
+
+  function formatPrice(svc) {
+    if (svc.price_usdc) return '$' + parseFloat(svc.price_usdc).toFixed(3) + ' USDC';
+    if (svc.maxAmountRequired) {
+      var val = parseInt(svc.maxAmountRequired) / 1e6;
+      return '$' + val.toFixed(3) + ' USDC';
+    }
+    return 'variable';
+  }
+
+  function getHost(url) {
+    try { return new URL(url).hostname; } catch(e) { return url; }
+  }
+
+  function applyFilters() {
+    var q = searchQuery.toLowerCase();
+    filtered = allServices.filter(function(svc) {
+      var cat = svc._cat;
+      if (activeCategory !== 'all' && cat !== activeCategory) return false;
+      if (q) {
+        var text = ((svc.name || '') + ' ' + (svc.description || '') + ' ' + (svc.url || '')).toLowerCase();
+        if (text.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+    currentPage = 0;
+    render();
+  }
+
+  function buildCard(svc) {
+    var card = document.createElement('div');
+    card.className = 'catalog-card';
+
+    var tag = document.createElement('span');
+    tag.className = 'cat-tag ' + svc._cat;
+    tag.textContent = svc._cat.charAt(0).toUpperCase() + svc._cat.slice(1);
+    card.appendChild(tag);
+
+    var name = document.createElement('div');
+    name.className = 'catalog-name';
+    name.textContent = svc.name || 'Unnamed';
+    card.appendChild(name);
+
+    if (svc.description) {
+      var desc = document.createElement('div');
+      desc.className = 'catalog-desc';
+      desc.textContent = svc.description;
+      card.appendChild(desc);
+    }
+
+    var footer = document.createElement('div');
+    footer.className = 'catalog-footer';
+
+    var price = document.createElement('span');
+    price.className = 'catalog-price';
+    price.textContent = formatPrice(svc);
+    footer.appendChild(price);
+
+    var host = document.createElement('span');
+    host.className = 'catalog-host';
+    host.textContent = getHost(svc.url || '');
+    host.title = svc.url || '';
+    footer.appendChild(host);
+
+    card.appendChild(footer);
+    return card;
+  }
+
+  function render() {
+    var grid = document.getElementById('grid');
+    var pagination = document.getElementById('pagination');
+    var count = document.getElementById('results-count');
+    var pageInfo = document.getElementById('page-info');
+    var prevBtn = document.getElementById('prev-btn');
+    var nextBtn = document.getElementById('next-btn');
+
+    grid.textContent = '';
+
+    if (filtered.length === 0) {
+      var msg = document.createElement('div');
+      msg.className = 'state-msg';
+      msg.textContent = 'No APIs match your search.';
+      grid.appendChild(msg);
+      pagination.style.display = 'none';
+      count.textContent = '0 results';
+      return;
+    }
+
+    var totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    var start = currentPage * PAGE_SIZE;
+    var end = Math.min(start + PAGE_SIZE, filtered.length);
+    var page = filtered.slice(start, end);
+
+    for (var i = 0; i < page.length; i++) {
+      grid.appendChild(buildCard(page[i]));
+    }
+
+    count.textContent = filtered.length + ' results';
+    pageInfo.textContent = (currentPage + 1) + ' / ' + totalPages;
+    prevBtn.disabled = currentPage === 0;
+    nextBtn.disabled = currentPage >= totalPages - 1;
+    pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+
+    window.scrollTo(0, 0);
+  }
+
+  function init() {
+    fetch('/catalog.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var svcs = Array.isArray(data) ? data : (data.services || data.results || []);
+        svcs.forEach(function(s) { s._cat = categorize(s); });
+        allServices = svcs;
+        filtered = svcs;
+
+        var meta = document.getElementById('catalog-meta');
+        meta.textContent = svcs.length + ' verified live APIs. Updated nightly. ';
+        var link = document.createElement('a');
+        link.href = '/catalog.json';
+        link.textContent = 'Download catalog.json';
+        meta.appendChild(link);
+
+        render();
+      })
+      .catch(function(err) {
+        console.error(err);
+        var grid = document.getElementById('grid');
+        grid.textContent = '';
+        var msg = document.createElement('div');
+        msg.className = 'state-msg';
+        msg.textContent = 'Failed to load catalog.json';
+        grid.appendChild(msg);
+      });
+
+    document.getElementById('search').addEventListener('input', function(e) {
+      searchQuery = e.target.value;
+      applyFilters();
+    });
+
+    document.getElementById('filters').addEventListener('click', function(e) {
+      var btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeCategory = btn.dataset.cat;
+      applyFilters();
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', function() {
+      if (currentPage > 0) { currentPage--; render(); }
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function() {
+      var totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+      if (currentPage < totalPages - 1) { currentPage++; render(); }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
