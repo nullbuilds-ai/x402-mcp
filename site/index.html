@@ -206,6 +206,14 @@
   .qs-note a:hover { color: #666; }
   .traction-sub { color: #2a2a2a; font-size: 10px; margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
 
+  /* WORKS WITH */
+  .works-with { display: flex; align-items: center; gap: 0; margin-bottom: 80px; border: 1px solid var(--bg-elevated); border-radius: 8px; overflow: hidden; }
+  .works-with-label { color: #2a2a2a; font-size: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; padding: 16px 24px; border-right: 1px solid var(--bg-elevated); white-space: nowrap; flex-shrink: 0; }
+  .works-with-clients { display: flex; align-items: center; flex: 1; }
+  .works-with-client { flex: 1; text-align: center; padding: 16px 20px; color: #2a2a2a; font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; border-right: 1px solid var(--bg-elevated); letter-spacing: 0.5px; transition: color 0.15s; }
+  .works-with-client:last-child { border-right: none; }
+  .works-with-client:hover { color: #555; }
+
   /* FAQ */
   .faq { margin-top: 32px; }
   .faq-item { border-top: 1px solid var(--bg-elevated); padding: 20px 0; }
@@ -227,6 +235,10 @@
   }
   @media (max-width: 640px) {
     body { padding: 0 20px 80px; }
+    .works-with { flex-direction: column; }
+    .works-with-label { border-right: none; border-bottom: 1px solid var(--bg-elevated); width: 100%; }
+    .works-with-client { border-right: none; border-bottom: 1px solid var(--bg-elevated); }
+    .works-with-client:last-child { border-bottom: none; }
     .hero h1 { font-size: 36px; }
     .steps { grid-template-columns: 1fr; }
     .code-compare { grid-template-columns: 1fr; }
@@ -306,6 +318,17 @@
     <div class="traction-num">7.2%</div>
     <div class="traction-label">Survival rate</div>
     <div class="traction-sub">of probed endpoints are live</div>
+  </div>
+</div>
+
+<!-- WORKS WITH -->
+<div class="works-with">
+  <div class="works-with-label">Works with</div>
+  <div class="works-with-clients">
+    <div class="works-with-client">Claude</div>
+    <div class="works-with-client">Cursor</div>
+    <div class="works-with-client">Windsurf</div>
+    <div class="works-with-client">any MCP client</div>
   </div>
 </div>
 
