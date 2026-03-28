@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool reference — x402-mcp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="x402-mcp tool reference — all 7 MCP tools documented with parameters and usage.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-elevated: #161616;
+    --border: #1a1a1a;
+    --accent: #00ff88;
+    --text: #e0e0e0;
+    --text-muted: #666;
+    --text-dim: #3a3a3a;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  a { color: inherit; text-decoration: none; }
+  code { font-family: 'JetBrains Mono', monospace; }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--bg-elevated);
+    margin-bottom: 64px;
+  }
+  .nav-logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { color: var(--text-muted); font-size: 13px; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--text); }
+  .btn-primary { background: var(--accent); color: #000; padding: 8px 18px; border-radius: 5px; font-size: 13px; font-weight: 700; }
+  .btn-primary:hover { background: #00e07a; color: #000; }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 56px;
+  }
+  .page-header-tag {
+    color: #2a2a2a;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .page-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .badge-free {
+    background: #012a14;
+    color: var(--accent);
+    border: 1px solid #0a4a20;
+  }
+  .badge-wallet {
+    background: #1a1200;
+    color: #cc9900;
+    border: 1px solid #2a2000;
+  }
+
+  /* TOOL CARDS */
+  .tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tool {
+    border: 1px solid var(--bg-elevated);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .tool-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .tool-header-left {
+    flex: 1;
+  }
+  .tool-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .tool-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 560px;
+  }
+  .tool-badge {
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  /* PARAMS TABLE */
+  .tool-params {
+    border-top: 1px solid var(--bg-elevated);
+    padding: 16px 24px;
+    background: #0d0d0d;
+  }
+  .params-label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 12px 8px 0;
+    border-bottom: 1px solid #161616;
+  }
+  td {
+    padding: 8px 12px 8px 0;
+    vertical-align: top;
+    border-bottom: 1px solid #111;
+    font-size: 13px;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  .param-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .param-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    white-space: nowrap;
+  }
+  .param-required {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #663300;
+    background: #1a0a00;
+    border: 1px solid #2a1200;
+    padding: 1px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .param-optional {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #2a2a2a;
+    background: #111;
+    border: 1px solid #1a1a1a;
+    padding: 1px 5px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .param-desc {
+    color: #555;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .param-desc code {
+    color: var(--text-muted);
+    font-size: 11px;
+    background: #111;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* RETURNS */
+  .tool-returns {
+    border-top: 1px solid var(--bg-elevated);
+    padding: 12px 24px;
+    background: #0d0d0d;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .returns-label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    flex-shrink: 0;
+  }
+  .returns-value {
+    color: #555;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* NO PARAMS */
+  .no-params {
+    color: #2a2a2a;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--bg-elevated); padding-top: 32px; display: flex; justify-content: space-between; align-items: center; margin-top: 80px; }
+  .footer-left { color: #2a2a2a; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { color: #333; font-size: 12px; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--text-muted); }
+
+  @media (max-width: 640px) {
+    .page-header h1 { font-size: 28px; }
+    .tool-header { flex-direction: column; gap: 10px; }
+    th, td { padding-right: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><span>x402</span>-mcp</a>
+  <div class="nav-links">
+    <a href="/catalog">Catalog</a>
+    <a href="/docs" class="active">Docs</a>
+    <a href="https://github.com/nullbuilds-ai/x402-mcp" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.npmjs.com/package/@nullbuilds/x402-mcp" class="btn-primary">Start free</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-tag">v0.4.0 &nbsp;·&nbsp; MCP tools</div>
+  <h1>Tool reference</h1>
+  <p>All 7 tools exposed by x402-mcp. Discovery and estimation require no credentials. Payment tools require a CDP wallet configured via <code>x402_configure</code>.</p>
+</div>
+
+<div class="tool-list">
+
+  <!-- x402_discover -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_discover</div>
+        <div class="tool-desc">Browse the API catalog. Filter by keyword or network to find x402-enabled APIs. Returns live endpoints with pricing and network details.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-free">free</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th></th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">keyword</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">Search term to filter APIs by name or description. E.g. <code>"weather"</code>, <code>"FDA"</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">network</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">Filter by blockchain network. E.g. <code>"base"</code>, <code>"base-sepolia"</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">List of APIs with endpoint URLs, cost per call, and network.</span>
+    </div>
+  </div>
+
+  <!-- x402_estimate -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_estimate</div>
+        <div class="tool-desc">Check the exact cost of an API call before committing any payment. Probes the endpoint live and returns the payment requirements.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-free">free</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th></th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">url</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-required">required</span></td>
+            <td class="param-desc">Full URL of the x402-enabled endpoint to probe.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">Price in USDC, payment token contract address, and network.</span>
+    </div>
+  </div>
+
+  <!-- x402_pay -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_pay</div>
+        <div class="tool-desc">Make a paid API call. Handles the full x402 payment flow: wallet signing, payment header encoding, and request retry. Returns the API response and a payment receipt.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-wallet">CDP wallet required</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th></th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">url</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-required">required</span></td>
+            <td class="param-desc">Full URL of the x402-enabled endpoint to call.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">method</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">HTTP method. Defaults to <code>"GET"</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">body</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">Request body for POST/PUT requests. Pass as a JSON string.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">API response body plus a receipt with amount paid, transaction hash, and timestamp.</span>
+    </div>
+  </div>
+
+  <!-- x402_balance -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_balance</div>
+        <div class="tool-desc">Check the USDC balance of the configured CDP wallet. Reads from the wallet set up via <code>x402_configure</code>.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-wallet">CDP wallet required</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <div class="no-params">none</div>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">USDC balance of the configured wallet.</span>
+    </div>
+  </div>
+
+  <!-- x402_configure -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_configure</div>
+        <div class="tool-desc">Configure the MCP server with a CDP wallet and network. Required before using <code>x402_pay</code> or <code>x402_balance</code>. Signing happens in Coinbase's TEE — your private key never touches your machine.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-wallet">CDP wallet required</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th></th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">wallet_seed</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">CDP wallet seed phrase or private key. Stored in memory only for the session.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">network</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="param-optional">optional</span></td>
+            <td class="param-desc">Target network for payments. E.g. <code>"base"</code>, <code>"base-sepolia"</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">Configuration status and active wallet address.</span>
+    </div>
+  </div>
+
+  <!-- x402_catalog_stats -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_catalog_stats</div>
+        <div class="tool-desc">Get current statistics for the API catalog. Useful for understanding catalog freshness and scale before running discovery queries.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-free">free</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <div class="no-params">none</div>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">Total live APIs, total endpoints tested, and last updated timestamp.</span>
+    </div>
+  </div>
+
+  <!-- x402_health -->
+  <div class="tool">
+    <div class="tool-header">
+      <div class="tool-header-left">
+        <div class="tool-name">x402_health</div>
+        <div class="tool-desc">Health check for the MCP server. Returns server status and current version. Useful for verifying the server is running correctly after installation.</div>
+      </div>
+      <div class="tool-badge"><span class="badge badge-free">free</span></div>
+    </div>
+    <div class="tool-params">
+      <div class="params-label">Parameters</div>
+      <div class="no-params">none</div>
+    </div>
+    <div class="tool-returns">
+      <span class="returns-label">Returns</span>
+      <span class="returns-value">Server status and version string.</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-left">x402-mcp &nbsp;·&nbsp; built by <a href="https://nullbuilds.com" style="color:#333;">null</a></div>
+  <div class="footer-links">
+    <a href="https://www.npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
+    <a href="https://github.com/nullbuilds-ai/x402-mcp" target="_blank" rel="noopener">GitHub</a>
+    <a href="/catalog">Catalog</a>
+    <a href="https://x402.org" target="_blank" rel="noopener">x402.org</a>
+  </div>
+</footer>
+
+</body>
+</html>
