@@ -197,6 +197,15 @@
   .waitlist-btn:hover { background: #00e07a; }
   .waitlist-sub { color: #2a4a2a; font-size: 11px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; }
 
+  /* QUICKSTART */
+  .qs-block { margin-top: 24px; background: #0d0d0d; border: 1px solid var(--bg-elevated); border-radius: 8px; overflow: hidden; }
+  .copy-btn { margin-left: auto; background: none; border: 1px solid #222; color: #444; font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 3px 10px; border-radius: 4px; cursor: pointer; transition: border-color 0.15s, color 0.15s; flex-shrink: 0; }
+  .copy-btn:hover { border-color: #444; color: #888; }
+  .qs-note { color: #2a2a2a; font-size: 11px; font-family: 'JetBrains Mono', monospace; margin-top: 12px; }
+  .qs-note a { color: #3a3a3a; }
+  .qs-note a:hover { color: #666; }
+  .traction-sub { color: #2a2a2a; font-size: 10px; margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+
   /* FAQ */
   .faq { margin-top: 32px; }
   .faq-item { border-top: 1px solid var(--bg-elevated); padding: 20px 0; }
@@ -296,8 +305,32 @@
   <div class="traction-item">
     <div class="traction-num">7.2%</div>
     <div class="traction-label">Survival rate</div>
+    <div class="traction-sub">of probed endpoints are live</div>
   </div>
 </div>
+
+<!-- QUICKSTART -->
+<section class="section">
+  <div class="section-label">Quickstart</div>
+  <h2>Up in 30 seconds.</h2>
+  <p>No account. No API key. Add one block to your MCP client config and start browsing 957 live paid APIs immediately — no wallet required.</p>
+  <div class="qs-block">
+    <div class="code-header">
+      <div class="code-dot"></div>
+      <div class="code-dot"></div>
+      <div class="code-dot"></div>
+      <span class="code-header-label" style="color:#444;">claude_desktop_config.json &nbsp;·&nbsp; mcpServers</span>
+      <button class="copy-btn" onclick="copyConfig(this)">Copy</button>
+    </div>
+    <div class="code-body">
+      <span class="c-str">"x402"</span><span class="c-key">: {</span><br>
+      &nbsp;&nbsp;<span class="c-str">"command"</span><span class="c-key">: </span><span class="c-str">"npx"</span><span class="c-key">,</span><br>
+      &nbsp;&nbsp;<span class="c-str">"args"</span><span class="c-key">: [</span><span class="c-str">"-y"</span><span class="c-key">, </span><span class="c-str">"@nullbuilds/x402-mcp"</span><span class="c-key">]</span><br>
+      <span class="c-key">}</span>
+    </div>
+  </div>
+  <div class="qs-note">discover + estimate work immediately &nbsp;·&nbsp; <a href="/docs">add CDP wallet config</a> to enable payments</div>
+</section>
 
 <!-- HOW IT WORKS -->
 <section class="section">
@@ -376,7 +409,7 @@
       <div class="pricing-features">
         <div class="pricing-feature"><span class="check">✓</span><span>Catalog access — free</span></div>
         <div class="pricing-feature"><span class="check">✓</span><span>Cost estimation — free</span></div>
-<div class="pricing-feature"><span class="check">✓</span><span>BYOW (bring your own CDP wallet) — free</span></div>
+        <div class="pricing-feature"><span class="check">✓</span><span>BYOW (bring your own CDP wallet) — free</span></div>
         <div class="pricing-feature"><span class="soon">◎</span><span class="dim">Hosted wallet — coming soon</span></div>
       </div>
     </div>
@@ -409,7 +442,7 @@
   <div class="faq">
     <div class="faq-item">
       <div class="faq-q">Do I need a crypto wallet to use this?</div>
-      <div class="faq-a">No. <code>discover_paid_services</code>, <code>estimate_payment</code>, and <code>check_wallet_balance</code> all work with zero credentials. You only need a wallet to make actual payments via <code>make_x402_request</code>.</div>
+      <div class="faq-a">No. <code>x402_discover</code>, <code>x402_estimate</code>, and <code>x402_balance</code> all work with zero credentials. You only need a wallet to make actual payments via <code>x402_pay</code>.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Is my private key on my machine?</div>
@@ -431,12 +464,21 @@
   <div class="footer-links">
     <a href="https://www.npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
     <a href="https://github.com/nullbuilds-ai/x402-mcp" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://x.com/nullbuilds" target="_blank" rel="noopener">@nullbuilds</a>
     <a href="/catalog">Catalog</a>
     <a href="https://x402.org" target="_blank" rel="noopener">x402.org</a>
   </div>
 </footer>
 
 <script>
+function copyConfig(btn) {
+  const config = '"x402": {\n  "command": "npx",\n  "args": ["-y", "@nullbuilds/x402-mcp"]\n}';
+  navigator.clipboard.writeText(config).then(() => {
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+  });
+}
 function handleWaitlist(e) {
   e.preventDefault();
   const email = e.target.querySelector('input').value;
