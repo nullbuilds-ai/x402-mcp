@@ -38,8 +38,8 @@
     -webkit-backdrop-filter: blur(12px);
   }
   .nav-inner {
-    max-width: 1080px; margin: 0 auto;
-    padding: 0 32px; height: 52px;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 40px; height: 52px;
     display: flex; align-items: center; justify-content: space-between;
   }
   .nav-logo {
@@ -54,13 +54,15 @@
   }
   .nav-links a:hover { color: var(--text); }
   .nav-links a.active { color: var(--text); }
+  .btn-primary { background: var(--accent); color: #000; padding: 8px 18px; border-radius: 5px; font-size: 13px; font-weight: 700; text-decoration: none; }
+  .btn-primary:hover { background: #d09600; color: #000; }
   .nav-badge {
     font-size: 11px; font-family: var(--mono);
     background: var(--accent-dim); color: var(--accent);
     border: 1px solid rgba(232,165,0,0.2);
     border-radius: 4px; padding: 2px 8px;
   }
-  .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 
   /* PAGE HEADER */
   .page-header {
@@ -183,7 +185,7 @@
     padding: 32px 0;
   }
   .footer-inner {
-    max-width: 1080px; margin: 0 auto; padding: 0 32px;
+    max-width: 1200px; margin: 0 auto; padding: 0 40px;
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
   }
   .footer-logo { font-family: var(--mono); font-size: 13px; color: var(--text-muted); }
@@ -207,12 +209,12 @@
 
 <nav>
   <div class="nav-inner">
-    <a href="/" class="nav-logo">x402<span>-mcp</span></a>
+    <a href="/" class="nav-logo"><span>x402</span>-mcp</a>
     <div class="nav-links">
-      <a href="/">Overview</a>
       <a href="/catalog" class="active">Catalog</a>
-      <a href="https://npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
-      <span class="nav-badge">v0.4.0</span>
+      <a href="/docs">Docs</a>
+      <a href="https://github.com/nullbuilds-ai/x402-mcp" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.npmjs.com/package/@nullbuilds/x402-mcp" class="btn-primary">Start free</a>
     </div>
   </div>
 </nav>
@@ -248,13 +250,14 @@
   </div>
 </div>
 
-<footer>
-  <div class="footer-inner">
-    <span class="footer-logo">x402<span>-mcp</span> &mdash; by nullbuilds</span>
-    <div class="footer-links">
-      <a href="https://npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener">npm</a>
-      <a href="/catalog.json">catalog.json</a>
-    </div>
+<footer style="border-top:1px solid var(--bg-elevated);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:40px auto 0;box-sizing:border-box;">
+  <div style="color:#3a3020;font-size:12px;">x402-mcp &nbsp;·&nbsp; built by <a href="https://nullbuilds.com" style="color:#3a3020;">null</a></div>
+  <div style="display:flex;gap:20px;">
+    <a href="https://www.npmjs.com/package/@nullbuilds/x402-mcp" target="_blank" rel="noopener" style="color:#3a3020;font-size:12px;text-decoration:none;">npm</a>
+    <a href="https://github.com/nullbuilds-ai/x402-mcp" target="_blank" rel="noopener" style="color:#3a3020;font-size:12px;text-decoration:none;">GitHub</a>
+    <a href="https://x.com/nullbuilds" target="_blank" rel="noopener" style="color:#3a3020;font-size:12px;text-decoration:none;">@nullbuilds</a>
+    <a href="/" style="color:#3a3020;font-size:12px;text-decoration:none;">Home</a>
+    <a href="https://x402.org" target="_blank" rel="noopener" style="color:#3a3020;font-size:12px;text-decoration:none;">x402.org</a>
   </div>
 </footer>
 
