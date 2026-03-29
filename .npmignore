@@ -1,0 +1,10 @@
+node_modules/
+src/
+site/
+scripts/
+docs/
+.superpowers/
+.vercel/
+*.env
+.env*
+tsconfig.json

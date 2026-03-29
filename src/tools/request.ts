@@ -2,7 +2,7 @@ import { z } from "zod";
 import { x402Client, x402HTTPClient } from "@x402/core/client";
 import { ExactEvmScheme } from "@x402/evm";
 import { formatUsdc } from "../lib/x402.js";
-import { getWallet, hasCdpCredentials } from "../lib/wallet.js";
+import { getSignerAccount, hasWallet } from "../lib/wallet.js";
 import { logPayment } from "../lib/history.js";
 import type { PaymentRequirements, PaymentRequirementsV1 } from "@x402/core/types";
 
@@ -29,19 +29,8 @@ function getAmount(req: PaymentRequirements | PaymentRequirementsV1): string {
 }
 
 export async function makeX402Request(input: RequestInput): Promise<string> {
-  if (!hasCdpCredentials()) {
-    return [
-      "CDP credentials not configured.",
-      "",
-      "Add to your Claude Desktop config:",
-      '  "env": {',
-      '    "CDP_API_KEY_ID": "your-key-id",',
-      '    "CDP_API_KEY_SECRET": "your-key-secret",',
-      '    "CDP_WALLET_SECRET": "your-wallet-secret"',
-      "  }",
-      "",
-      "Get credentials at portal.cdp.coinbase.com",
-    ].join("\n");
+  if (!hasWallet()) {
+    return "No wallet configured. Ask get_my_wallet for setup instructions.";
   }
 
   // Step 1: Initial request — expect 402
@@ -100,14 +89,8 @@ export async function makeX402Request(input: RequestInput): Promise<string> {
     ].join("\n");
   }
 
-  // Step 4: Get CDP wallet and create ClientEvmSigner adapter
-  const account = await getWallet();
-
-  const signer = {
-    address: account.address as `0x${string}`,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    signTypedData: (msg: any) => account.signTypedData(msg as any),
-  };
+  // Step 4: Get signer (CDP or local key)
+  const signer = await getSignerAccount();
 
   // Step 5: Build x402 client with ExactEvmScheme registered for Base
   const scheme = new ExactEvmScheme(signer);
@@ -138,7 +121,7 @@ export async function makeX402Request(input: RequestInput): Promise<string> {
     amount_usdc: formatUsdc(amountRaw),
     amount_raw: amountRaw,
     network: cheapest.network,
-    wallet: account.address,
+    wallet: signer.address,
     status: paidRes.ok ? "success" as const : "failed" as const,
     http_status: paidRes.status,
   };
@@ -148,7 +131,7 @@ export async function makeX402Request(input: RequestInput): Promise<string> {
     return [
       `Payment sent but request failed (${paidRes.status}).`,
       `Cost: ${formatUsdc(amountRaw)}`,
-      `Wallet: ${account.address}`,
+      `Wallet: ${signer.address}`,
       "",
       "Response:",
       responseText,
@@ -163,7 +146,7 @@ export async function makeX402Request(input: RequestInput): Promise<string> {
   }
 
   return [
-    `Success. Paid ${formatUsdc(amountRaw)} from ${account.address}`,
+    `Success. Paid ${formatUsdc(amountRaw)} from ${signer.address}`,
     "",
     body,
   ].join("\n");

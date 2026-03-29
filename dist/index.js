@@ -7,7 +7,10 @@ import { discoverPaidServices, discoverSchema } from "./tools/discover.js";
 import { getServiceDetails, detailsSchema } from "./tools/details.js";
 import { estimatePayment, estimateSchema } from "./tools/estimate.js";
 import { checkWalletBalance, balanceSchema } from "./tools/balance.js";
-const server = new Server({ name: "x402-mcp", version: "0.1.0" }, { capabilities: { tools: {} } });
+import { makeX402Request, requestSchema } from "./tools/request.js";
+import { getMyWallet } from "./tools/wallet-info.js";
+import { getPaymentHistory, historySchema } from "./tools/history.js";
+const server = new Server({ name: "x402-mcp", version: "0.4.0" }, { capabilities: { tools: {} } });
 server.setRequestHandler(ListToolsRequestSchema, () => ({
     tools: [
         {
@@ -57,6 +60,38 @@ server.setRequestHandler(ListToolsRequestSchema, () => ({
                 required: ["wallet_address"],
             },
         },
+        {
+            name: "make_x402_request",
+            description: "Pay and call an x402-enabled API using your CDP wallet. Handles payment automatically. Returns the actual API response. Requires CDP_API_KEY_ID, CDP_API_KEY_SECRET, CDP_WALLET_SECRET in env.",
+            inputSchema: {
+                type: "object",
+                properties: {
+                    resource_url: { type: "string", description: "URL of the x402 API to call" },
+                    method: { type: "string", enum: ["GET", "POST"], description: "HTTP method (default GET)" },
+                    body: { type: "string", description: "JSON body for POST requests" },
+                    max_cost_usdc: {
+                        type: "number",
+                        description: "Maximum USDC cost to allow (default 1.0). Request aborts if cost exceeds this.",
+                    },
+                },
+                required: ["resource_url"],
+            },
+        },
+        {
+            name: "get_my_wallet",
+            description: "Return your x402-mcp CDP wallet address. Use this to find out where to send USDC before making paid API calls. Requires CDP credentials.",
+            inputSchema: { type: "object", properties: {} },
+        },
+        {
+            name: "get_payment_history",
+            description: "Show your recent x402 payment history — what APIs you called, how much you paid, and whether each succeeded.",
+            inputSchema: {
+                type: "object",
+                properties: {
+                    limit: { type: "number", description: "Number of records to return (1-100, default 20)" },
+                },
+            },
+        },
     ],
 }));
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
@@ -82,6 +117,20 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
             case "check_wallet_balance": {
                 const input = balanceSchema.parse(args);
                 result = await checkWalletBalance(input);
+                break;
+            }
+            case "make_x402_request": {
+                const input = requestSchema.parse(args);
+                result = await makeX402Request(input);
+                break;
+            }
+            case "get_my_wallet": {
+                result = await getMyWallet();
+                break;
+            }
+            case "get_payment_history": {
+                const input = historySchema.parse(args);
+                result = await getPaymentHistory(input);
                 break;
             }
             default:
