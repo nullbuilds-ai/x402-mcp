@@ -10,16 +10,16 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a;
-    --bg-card: #111111;
-    --bg-elevated: #161616;
-    --border: #222222;
-    --border-subtle: #1a1a1a;
-    --accent: #00ff88;
-    --accent-dim: rgba(0,255,136,0.08);
-    --text: #f0f0f0;
-    --text-muted: #888;
-    --text-dim: #555;
+    --bg: #090805;
+    --bg-card: #120f0a;
+    --bg-elevated: #1e1912;
+    --border: #221c13;
+    --border-subtle: #1e1912;
+    --accent: #e8a500;
+    --accent-dim: rgba(232,165,0,0.08);
+    --text: #e4ddd0;
+    --text-muted: #6b6050;
+    --text-dim: #3a3020;
     --radius: 8px;
     --mono: 'JetBrains Mono', monospace;
   }
@@ -33,7 +33,7 @@
   nav {
     position: sticky; top: 0; z-index: 100;
     border-bottom: 1px solid var(--border);
-    background: rgba(10,10,10,0.85);
+    background: rgba(9,8,5,0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -57,7 +57,7 @@
   .nav-badge {
     font-size: 11px; font-family: var(--mono);
     background: var(--accent-dim); color: var(--accent);
-    border: 1px solid rgba(0,255,136,0.2);
+    border: 1px solid rgba(232,165,0,0.2);
     border-radius: 4px; padding: 2px 8px;
   }
   .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
@@ -104,7 +104,7 @@
   .filter-btn:hover { border-color: #444; color: var(--text); }
   .filter-btn.active {
     background: var(--accent-dim);
-    border-color: rgba(0,255,136,0.3);
+    border-color: rgba(232,165,0,0.3);
     color: var(--accent);
   }
   .results-count {
